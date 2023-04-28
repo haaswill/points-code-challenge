@@ -5,6 +5,7 @@ import { P } from '@/components/Layout/Typography';
 interface IAlert {
   // Could be expanded in the future
   variant?: 'error';
+  fullWidth?: boolean;
 }
 
 interface IAlertParams extends IAlert {
@@ -23,6 +24,7 @@ const StyledAlert = styled.div<IAlert>`
   color: ${({ theme }) => theme.colors.primary};
   padding: 2rem;
   text-align: left;
+  width: ${({ fullWidth = false }) => (fullWidth ? '100%' : 'auto')};
 
   ${P} {
     font-size: 2rem;
@@ -32,9 +34,9 @@ const StyledAlert = styled.div<IAlert>`
   ${({ variant }) => variant === 'error' && errorStyles}
 `;
 
-function Alert({ message, variant }: IAlertParams) {
+function Alert({ message, variant, fullWidth }: IAlertParams) {
   return (
-    <StyledAlert variant={variant}>
+    <StyledAlert variant={variant} fullWidth={fullWidth}>
       <P>{message}</P>
     </StyledAlert>
   );

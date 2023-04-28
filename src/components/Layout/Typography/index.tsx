@@ -1,13 +1,18 @@
 import styled from 'styled-components';
 
+interface IHeading {
+  marginTop?: string;
+}
+
 const Title = styled.h1`
   font-size: 4rem;
   margin: 0 0 4rem;
 `;
 
-const Heading = styled.h2`
+const Heading = styled.h2<IHeading>`
   font-size: 3rem;
   margin: 0 0 3rem;
+  margin-top: ${({ marginTop = '0' }) => marginTop};
 `;
 
 const SubHeading = styled.h4`

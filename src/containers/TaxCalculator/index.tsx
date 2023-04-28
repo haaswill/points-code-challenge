@@ -14,6 +14,7 @@ import { Heading, Title } from '@/components/Layout/Typography';
 import { TaxBracket } from '@/components/TaxBracket';
 import { Spinner } from '@/components/Spinner';
 import { Alert } from '@/components/Alert';
+import { useCalculateIncomeTax } from '@/hooks/useCalculateIncomeTax';
 
 // could possibly come from the API instead
 const YEARS = ['2019', '2020', '2021', '2022'];
@@ -22,17 +23,19 @@ const DEFAULT_YEAR = '2022';
 function TaxCalculator() {
   const [year, setYear] = useState<string>(DEFAULT_YEAR);
   const [salary, setSalary] = useState<string>('');
-  const [calculating, setCalculating] = useState<boolean>(false);
+  const [incomeTax, setIncomeTax] = useState<string | null>(null);
 
   const { taxBrackets, loading, error } = useFetchTaxBrackets(year);
+  const { calculateIncomeTax } = useCalculateIncomeTax(taxBrackets);
 
   const handleOnChangeYear = (e: ChangeEvent<HTMLSelectElement>) => {
     setYear(e.target.value);
   };
 
-  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleOnClickSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(e);
+    const value = calculateIncomeTax(salary);
+    setIncomeTax(value);
   };
 
   const renderOptions = (value: string, index: number) => {
@@ -66,6 +69,16 @@ function TaxCalculator() {
     );
   };
 
+  const renderIncomeTax = () => {
+    if (!incomeTax) {
+      return null;
+    }
+
+    return (
+      <Heading marginTop={'3rem'}>{`Your income tax is ${incomeTax}`}</Heading>
+    );
+  };
+
   return (
     <Container width="600px">
       <Title>Calculate Your Income Tax</Title>
@@ -86,8 +99,11 @@ function TaxCalculator() {
               </Select>
             </Label>
           </Row>
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button type="button" onClick={handleOnClickSubmit}>
+            Submit
+          </Button>
         </Form>
+        {renderIncomeTax()}
       </Row>
       {renderBrackets()}
     </Container>

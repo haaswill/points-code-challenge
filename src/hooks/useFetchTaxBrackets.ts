@@ -22,7 +22,8 @@ const useFetchTaxBrackets: UseFetchTaxBrackets = (year) => {
     setLoading(true);
     TaxBrackets.getTaxBrackets(year)
       .then((data) => {
-        setTaxBrackets(data.tax_brackets);
+        // Making sure the brackets are sorted by min values
+        setTaxBrackets(data.tax_brackets.sort((a, b) => a.min - b.min));
         setError(null);
         setLoading(false);
       })
