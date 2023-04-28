@@ -5,7 +5,12 @@ declare module 'styled-components' {
     colors: {
       primary: string;
       secondary: string;
+      tertiary: string;
       background: string;
+      border: string;
+      error: string;
+      font: string;
     };
+    borderRadius: string;
   }
 }

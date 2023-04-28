@@ -3,10 +3,15 @@ import { ThemeProvider, DefaultTheme } from 'styled-components';
 import { GlobalStyle } from '../components/GlobalStyles';
 
 const theme: DefaultTheme = {
+  borderRadius: '4px',
   colors: {
-    primary: '#111',
-    secondary: '#0070f3',
-    background: '#fdfdfd',
+    primary: '#5f469c',
+    secondary: '#3b396d',
+    tertiary: '#c4c2ff',
+    background: '#fbfbfb',
+    border: '#aaaaaa',
+    error: '#dd2206',
+    font: '#1e1e1e',
   },
 };
 

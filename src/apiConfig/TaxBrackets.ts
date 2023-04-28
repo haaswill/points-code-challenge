@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-interface TaxBracket {
+export interface ITaxBracket {
   max: number;
   min: number;
   rate: number;
@@ -14,12 +14,14 @@ const instance = axios.create({
 const responseBody = (response: AxiosResponse) => response.data;
 
 const taxBracketsRequests = {
-  get: (url: string) => instance.get<TaxBracket>(url).then(responseBody),
+  get: (url: string) => instance.get<ITaxBracket>(url).then(responseBody),
   // other methods can be added, for instance POST, DELETE, ETC
 };
 
-export const TaxBrackets = {
-  getTaxBrackets: (year: string): Promise<TaxBracket> =>
+const TaxBrackets = {
+  getTaxBrackets: (year: string): Promise<ITaxBracket> =>
     taxBracketsRequests.get(`/tax-calculator/tax-year/${year}`),
   // other functions can be added to use the available methods
 };
+
+export { TaxBrackets };
