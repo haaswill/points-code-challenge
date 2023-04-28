@@ -1,11 +1,12 @@
 import type { AppProps } from 'next/app';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
-import GlobalStyle from '../components/GlobalStyles';
+import { GlobalStyle } from '../components/GlobalStyles';
 
 const theme: DefaultTheme = {
   colors: {
     primary: '#111',
     secondary: '#0070f3',
+    background: '#fdfdfd',
   },
 };
 

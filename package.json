@@ -17,6 +17,7 @@
     "challenge"
   ],
   "private": true,
+  "license": "SEE LICENSE IN ./LICENSE",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -27,6 +28,7 @@
     "test-watch": "jest --watch"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "next": "13.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
