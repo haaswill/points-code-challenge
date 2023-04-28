@@ -5,6 +5,11 @@ const Title = styled.h1`
   margin: 0 0 4rem;
 `;
 
+const Heading = styled.h2`
+  font-size: 3rem;
+  margin: 0 0 3rem;
+`;
+
 const SubHeading = styled.h4`
   font-size: 2rem;
   margin: 0 0 2rem;
@@ -15,4 +20,4 @@ const P = styled.p`
   margin: 0 0 1rem;
 `;
 
-export { Title, SubHeading, P };
+export { Title, Heading, SubHeading, P };

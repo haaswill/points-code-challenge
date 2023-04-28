@@ -1,20 +1,52 @@
 import { ITaxBracket } from '@/apiConfig/TaxBrackets';
+import { formatCurrency } from '@/formatters';
 
-import { Card } from '@/components/Layout/Card';
-import { P, SubHeading } from '@/components/Layout/Typography';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/Table';
 
-function TaxBracket({ max, min, rate }: ITaxBracket) {
+interface ITaxBracketParams {
+  year: string;
+  taxBrackets: ITaxBracket[];
+}
+
+function TaxBracket({ year, taxBrackets }: ITaxBracketParams) {
+  const renderBracket = (min: number, max?: number) => {
+    if (min === 0) {
+      return `${formatCurrency(max!)} or less`;
+    }
+
+    if (!max) {
+      return `More than ${formatCurrency(min)}`;
+    }
+
+    return `${formatCurrency(min)} to ${formatCurrency(max)}`;
+  };
+
+  const renderRows = (taxBracket: ITaxBracket, index: number) => {
+    return (
+      <TableRow key={index}>
+        <TableCell>{renderBracket(taxBracket.min, taxBracket.max)}</TableCell>
+        <TableCell>{`${(taxBracket.rate * 100).toFixed(2)}%`}</TableCell>
+      </TableRow>
+    );
+  };
+
   return (
-    <Card>
-      <SubHeading>Max:</SubHeading>
-      <P>{max}</P>
-      <br />
-      <SubHeading>Min:</SubHeading>
-      <P>{min}</P>
-      <br />
-      <SubHeading>Rate:</SubHeading>
-      <P>{rate}</P>
-    </Card>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableHeader>Taxable Income - {year} Brackets</TableHeader>
+          <TableHeader>Tax Rate</TableHeader>
+        </TableRow>
+      </TableHead>
+      <TableBody>{taxBrackets.map(renderRows)}</TableBody>
+    </Table>
   );
 }
 

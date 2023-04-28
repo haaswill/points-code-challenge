@@ -1,4 +1,7 @@
-import { MouseEvent, useState } from 'react';
+import { ChangeEvent, MouseEvent, useState } from 'react';
+
+import { ITaxBracket } from '@/apiConfig/TaxBrackets';
+import { useFetchTaxBrackets } from '@/hooks/useFetchTaxBrackets';
 
 import { Container } from '@/components/Layout/Container';
 import { Row } from '@/components/Layout/Row';
@@ -7,10 +10,10 @@ import { Input } from '@/components/Input';
 import { Option, Select } from '@/components/Select';
 import { Button } from '@/components/Button';
 import { Label } from '@/components/Label';
-import { Card } from '@/components/Layout/Card';
-import { ITaxBracket } from '@/apiConfig/TaxBrackets';
-import { Title } from '@/components/Layout/Typography';
+import { Heading, Title } from '@/components/Layout/Typography';
 import { TaxBracket } from '@/components/TaxBracket';
+import { Spinner } from '@/components/Spinner';
+import { Alert } from '@/components/Alert';
 
 // could possibly come from the API instead
 const YEARS = ['2019', '2020', '2021', '2022'];
@@ -19,7 +22,13 @@ const DEFAULT_YEAR = '2022';
 function TaxCalculator() {
   const [year, setYear] = useState<string>(DEFAULT_YEAR);
   const [salary, setSalary] = useState<string>('');
-  const [taxBrackets, setTaxBrackets] = useState<ITaxBracket[]>([]);
+  const [calculating, setCalculating] = useState<boolean>(false);
+
+  const { taxBrackets, loading, error } = useFetchTaxBrackets(year);
+
+  const handleOnChangeYear = (e: ChangeEvent<HTMLSelectElement>) => {
+    setYear(e.target.value);
+  };
 
   const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -34,32 +43,35 @@ function TaxCalculator() {
     );
   };
 
-  const renderTaxBrackets = (taxBracket: ITaxBracket, index: number) => {
+  const renderBrackets = () => {
+    if (loading) {
+      return <Spinner />;
+    }
+
+    if (error) {
+      return <Alert variant="error" message={error.message} />;
+    }
+
+    if (taxBrackets.length === 0) {
+      return null;
+    }
+
     return (
-      <TaxBracket
-        max={taxBracket.max}
-        min={taxBracket.min}
-        rate={taxBracket.rate}
-        key={index}
-      />
+      <>
+        <Heading>Tax Brackets</Heading>
+        <Row direction="row">
+          <TaxBracket taxBrackets={taxBrackets} year={year} />
+        </Row>
+      </>
     );
   };
 
   return (
     <Container width="600px">
+      <Title>Calculate Your Income Tax</Title>
       <Row>
-        <Title>Calculate Your Income Tax</Title>
         <Form>
           <Row>
-            <Label label="Select the tax year:" name="year">
-              <Select
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                name="year"
-              >
-                {YEARS.map(renderOptions)}
-              </Select>
-            </Label>
             <Label label="Enter your Salary:" name="salary">
               <Input
                 value={salary}
@@ -68,14 +80,16 @@ function TaxCalculator() {
                 type="number"
               />
             </Label>
+            <Label label="Select the tax year:" name="year">
+              <Select value={year} onChange={handleOnChangeYear} name="year">
+                {YEARS.map(renderOptions)}
+              </Select>
+            </Label>
           </Row>
           <Button onClick={handleSubmit}>Submit</Button>
         </Form>
       </Row>
-      <Row>
-        {taxBrackets.length > 0 && <Title>Tax Brackets</Title>}
-        {taxBrackets.map(renderTaxBrackets)}
-      </Row>
+      {renderBrackets()}
     </Container>
   );
 }
