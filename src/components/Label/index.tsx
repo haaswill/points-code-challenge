@@ -5,10 +5,9 @@ interface IStyledLabel {
   hasError?: boolean;
 }
 
-interface ILabel {
+interface ILabel extends IStyledLabel {
   children: ReactElement;
   label: string;
-  hasError?: boolean;
   name: string;
 }
 

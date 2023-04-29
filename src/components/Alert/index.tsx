@@ -36,7 +36,7 @@ const StyledAlert = styled.div<IAlert>`
 
 function Alert({ message, variant, fullWidth }: IAlertParams) {
   return (
-    <StyledAlert variant={variant} fullWidth={fullWidth}>
+    <StyledAlert variant={variant} fullWidth={fullWidth} role="alert">
       <P>{message}</P>
     </StyledAlert>
   );

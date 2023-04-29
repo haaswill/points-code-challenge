@@ -1,14 +1,20 @@
+import { InputHTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
 
-interface IInput {
+interface IStyledInput {
   hasError?: boolean;
+}
+
+interface IInput extends IStyledInput, InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  name: string;
 }
 
 const errorStyles = css`
   border-color: ${({ theme }) => theme.colors.error};
 `;
 
-const Input = styled.input<IInput>`
+const StyledInput = styled.input<IStyledInput>`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius};
   box-sizing: border-box;
@@ -27,5 +33,17 @@ const Input = styled.input<IInput>`
 
   ${({ hasError = false }) => hasError && errorStyles}
 `;
+
+function Input({ label, hasError, name, ...rest }: IInput) {
+  return (
+    <StyledInput
+      name={name}
+      hasError={hasError}
+      aria-label={name}
+      aria-labelledby={label}
+      {...rest}
+    />
+  );
+}
 
 export { Input };
