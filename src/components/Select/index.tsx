@@ -1,14 +1,22 @@
+import { SelectHTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
 
-interface ISelect {
+interface IStyledSelect {
   hasError?: boolean;
+}
+
+interface ISelect
+  extends IStyledSelect,
+    SelectHTMLAttributes<HTMLSelectElement> {
+  label: string;
+  name: string;
 }
 
 const errorStyles = css`
   border-color: ${({ theme }) => theme.colors.error};
 `;
 
-const Select = styled.select<ISelect>`
+const StyledSelect = styled.select<IStyledSelect>`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius};
   box-sizing: border-box;
@@ -32,5 +40,18 @@ const Option = styled.option`
   color: inherit;
   font-size: inherit;
 `;
+
+function Select({ children, label, hasError, name, ...rest }: ISelect) {
+  return (
+    <StyledSelect
+      name={name}
+      hasError={hasError}
+      aria-labelledby={label}
+      {...rest}
+    >
+      {children}
+    </StyledSelect>
+  );
+}
 
 export { Select, Option };

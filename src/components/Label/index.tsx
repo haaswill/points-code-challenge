@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 
 interface IStyledLabel {
@@ -6,7 +6,7 @@ interface IStyledLabel {
 }
 
 interface ILabel extends IStyledLabel {
-  children: ReactElement;
+  children?: ReactNode;
   label: string;
   name: string;
 }
@@ -30,8 +30,7 @@ const StyledLabel = styled.label<IStyledLabel>`
 
 function Label({ children, label, hasError, name }: ILabel) {
   return (
-    <StyledLabel htmlFor={name} hasError={hasError}>
-      {label}
+    <StyledLabel htmlFor={name} hasError={hasError} id={label}>
       {children}
     </StyledLabel>
   );

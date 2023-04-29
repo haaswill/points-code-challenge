@@ -5,6 +5,6 @@ describe('Form', () => {
   it('renders with the correct props', () => {
     const { getByRole } = render(<Form></Form>);
 
-    expect(getByRole('form')).toBeValid();
+    expect(getByRole('form')).toBeInTheDocument();
   });
 });

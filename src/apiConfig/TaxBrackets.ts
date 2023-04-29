@@ -6,20 +6,19 @@ export interface ITaxBracket {
   rate: number;
 }
 
-interface IGetTaxBrackets {
+export interface IGetTaxBrackets {
   tax_brackets: ITaxBracket[];
 }
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 15000,
 });
 
 instance.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 500) {
-      throw new Error(
+      throw new AxiosError(
         'Something went wrong on our side, please refresh the page or contact support.'
       );
     }

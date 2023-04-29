@@ -1,7 +1,6 @@
 import { ChangeEvent, MouseEvent, useState } from 'react';
 
-import { ITaxBracket } from '@/apiConfig/TaxBrackets';
-import { useFetchTaxBrackets } from '@/hooks/useFetchTaxBrackets';
+import { useTaxBrackets } from '@/hooks/useTaxBrackets';
 
 import { Container } from '@/components/Layout/Container';
 import { Row } from '@/components/Layout/Row';
@@ -25,7 +24,7 @@ function TaxCalculator() {
   const [salary, setSalary] = useState<string>('');
   const [incomeTax, setIncomeTax] = useState<string | null>(null);
 
-  const { taxBrackets, loading, error } = useFetchTaxBrackets(year);
+  const { taxBrackets, loading, error } = useTaxBrackets(year);
   const { calculateIncomeTax } = useCalculateIncomeTax(taxBrackets);
 
   const handleOnChangeYear = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -85,16 +84,24 @@ function TaxCalculator() {
       <Row>
         <Form>
           <Row>
-            <Label label="Enter your Salary:" name="salary">
+            <Label label="salary-label" name="salary">
+              Enter your Salary:
               <Input
                 value={salary}
                 onChange={(e) => setSalary(e.target.value)}
                 name="salary"
+                label="salary-label"
                 type="number"
               />
             </Label>
-            <Label label="Select the tax year:" name="year">
-              <Select value={year} onChange={handleOnChangeYear} name="year">
+            <Label label="year-label" name="year">
+              Select the tax year:
+              <Select
+                value={year}
+                onChange={handleOnChangeYear}
+                name="year"
+                label="year-label"
+              >
                 {YEARS.map(renderOptions)}
               </Select>
             </Label>

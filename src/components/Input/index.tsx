@@ -6,7 +6,7 @@ interface IStyledInput {
 }
 
 interface IInput extends IStyledInput, InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+  label: string;
   name: string;
 }
 
@@ -39,7 +39,6 @@ function Input({ label, hasError, name, ...rest }: IInput) {
     <StyledInput
       name={name}
       hasError={hasError}
-      aria-label={name}
       aria-labelledby={label}
       {...rest}
     />
