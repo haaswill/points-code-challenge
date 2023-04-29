@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { AxiosError } from 'axios';
+import { useEffect, useState, useRef } from 'react';
 
 import { ITaxBracket, TaxBrackets } from '@/apiConfig/TaxBrackets';
 
@@ -19,6 +18,7 @@ type TaxBracketsState =
   | { loading: true; taxBrackets: []; error: null };
 
 const useTaxBrackets: UseTaxBrackets = (year) => {
+  const mountedRef = useRef(true);
   const [state, setState] = useState<TaxBracketsState>({
     loading: true,
     taxBrackets: [],
@@ -27,28 +27,33 @@ const useTaxBrackets: UseTaxBrackets = (year) => {
 
   useEffect(() => {
     const fetchTaxBrackets = async (): Promise<void> => {
-      try {
-        const response = await TaxBrackets.getTaxBrackets(year);
-        setState({
-          loading: false,
-          error: null,
-          taxBrackets: response.tax_brackets,
-        });
-      } catch (error: any) {
-        // Must be any or unknown since TS can't verify that the only error
-        // thrown is an instance of Error
-        if (error instanceof AxiosError) {
+      TaxBrackets.getTaxBrackets(year)
+        .then((response) => {
+          if (mountedRef.current) {
+            setState({
+              loading: false,
+              error: null,
+              taxBrackets: response.tax_brackets,
+            });
+          }
+        })
+        .catch((error) => {
           setState({
             loading: false,
             error: { message: error.message },
             taxBrackets: [],
           });
-        }
-      }
+        });
     };
 
     fetchTaxBrackets();
   }, [year]);
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   return { ...state };
 };

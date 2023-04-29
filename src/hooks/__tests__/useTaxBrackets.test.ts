@@ -1,4 +1,4 @@
-import { renderHook, waitFor, act } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { useTaxBrackets } from '../useTaxBrackets';
 import { getTaxBrackets } from '@/__mocks__';
 import { ITaxBracket, TaxBrackets } from '../../apiConfig/TaxBrackets';
