@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useCalculateIncomeTax } from '../useCalculateIncomeTax';
 import { getTaxBrackets } from '@/__mocks__';
 import { ITaxBracket } from '../../apiConfig/TaxBrackets';
@@ -12,7 +12,7 @@ describe('useTaxBrackets', () => {
     mockTaxBrackets = getTaxBrackets(2021);
   });
 
-  it('returns the correct income tax', async () => {
+  it('returns the correct income tax', () => {
     const { result } = renderHook(() => useCalculateIncomeTax(mockTaxBrackets));
 
     const incomeTax = result.current.calculateIncomeTax(salary);
