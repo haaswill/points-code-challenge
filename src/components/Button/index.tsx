@@ -6,11 +6,12 @@ const Button = styled.button`
   border-radius: ${({ theme }) => theme.borderRadius};
   box-shadow: 2px 5px 10px ${({ theme }) => theme.colors.border};
   color: ${({ theme }) => theme.colors.font};
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   font-size: 2rem;
   font-weight: 600;
   margin: 1rem 0;
   min-width: 250px;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   overflow: hidden;
   padding: 1rem;
   text-align: center;
@@ -19,14 +20,15 @@ const Button = styled.button`
   width: 50%;
 
   :hover {
-    opacity: 0.85;
+    opacity: ${({ disabled }) => (disabled ? 0.5 : 0.85)};
   }
 
   :active {
-    opacity: 0.75;
+    opacity: ${({ disabled }) => (disabled ? 0.5 : 0.75)};
   }
 
   :focus {
+    opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
     outline-color: ${({ theme }) => theme.colors.primary};
   }
 `;

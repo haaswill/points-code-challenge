@@ -27,6 +27,7 @@ const useTaxBrackets = (year: string): UseTaxBracketsResult => {
 
   useEffect(() => {
     const fetchTaxBrackets = async (): Promise<void> => {
+      setState({ loading: true, error: null, taxBrackets: [] });
       TaxBrackets.getTaxBrackets(year)
         .then((response) => {
           if (mountedRef.current) {

@@ -7,6 +7,7 @@ interface IHeading {
 const Title = styled.h1`
   font-size: 4rem;
   margin: 0 0 4rem;
+  text-align: center;
 `;
 
 const Heading = styled.h2<IHeading>`

@@ -106,7 +106,11 @@ function TaxCalculator() {
               </Select>
             </Label>
           </Row>
-          <Button type="button" onClick={handleOnClickSubmit}>
+          <Button
+            type="button"
+            onClick={handleOnClickSubmit}
+            disabled={!salary || !year || error !== null}
+          >
             Submit
           </Button>
         </Form>
