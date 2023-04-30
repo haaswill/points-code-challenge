@@ -6,7 +6,7 @@ interface IUseTaxBracketsError {
   message: string;
 }
 
-type UseTaxBrackets = (year: string) => {
+type UseTaxBracketsResult = {
   taxBrackets: ITaxBracket[];
   loading: boolean;
   error: IUseTaxBracketsError | null;
@@ -17,7 +17,7 @@ type TaxBracketsState =
   | { loading: false; taxBrackets: []; error: IUseTaxBracketsError }
   | { loading: true; taxBrackets: []; error: null };
 
-const useTaxBrackets: UseTaxBrackets = (year) => {
+const useTaxBrackets = (year: string): UseTaxBracketsResult => {
   const mountedRef = useRef(true);
   const [state, setState] = useState<TaxBracketsState>({
     loading: true,

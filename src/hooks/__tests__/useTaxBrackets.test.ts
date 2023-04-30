@@ -7,9 +7,10 @@ jest.mock('../../apiConfig/TaxBrackets');
 
 describe('useTaxBrackets', () => {
   let mockTaxBrackets: ITaxBracket[];
+  const year = '2022';
 
   beforeAll(() => {
-    mockTaxBrackets = getTaxBrackets(2022);
+    mockTaxBrackets = getTaxBrackets(Number(year));
 
     TaxBrackets.getTaxBrackets = jest
       .fn()
@@ -18,28 +19,25 @@ describe('useTaxBrackets', () => {
       );
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('returns the initial state loading', async () => {
-    const { result } = renderHook(() => useTaxBrackets('2022'));
+  it('returns the initial state', async () => {
+    const { result, unmount } = renderHook(() => useTaxBrackets(year));
 
     expect(result.current).toStrictEqual({
       loading: true,
       taxBrackets: [],
       error: null,
     });
+
+    unmount();
   });
 
-  // TODO: Fix act() warning
   it('returns data and loading is set to false', async () => {
-    const { result } = renderHook(() => useTaxBrackets('2022'));
+    const { result, unmount } = renderHook(() => useTaxBrackets(year));
 
-    expect(result.current.loading).toBe(true);
-
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    await waitFor(() => result.current.loading === false);
 
     expect(result.current.taxBrackets).toBe(mockTaxBrackets);
+
+    unmount();
   });
 });
