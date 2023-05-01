@@ -9,11 +9,14 @@ import { Input } from '@/components/Input';
 import { Option, Select } from '@/components/Select';
 import { Button } from '@/components/Button';
 import { Label } from '@/components/Label';
-import { Heading, Title } from '@/components/Layout/Typography';
-import { TaxBracket } from '@/components/TaxBracket';
+import { Title } from '@/components/Layout/Typography';
+import { IncomeTax } from '@/components/IncomeTax';
 import { Spinner } from '@/components/Spinner';
 import { Alert } from '@/components/Alert';
-import { useCalculateIncomeTax } from '@/hooks/useCalculateIncomeTax';
+import {
+  IIncomeTax,
+  useCalculateIncomeTax,
+} from '@/hooks/useCalculateIncomeTax';
 
 // could possibly come from the API instead
 const YEARS = ['2019', '2020', '2021', '2022'];
@@ -22,7 +25,7 @@ const DEFAULT_YEAR = '2022';
 function TaxCalculator() {
   const [year, setYear] = useState<string>(DEFAULT_YEAR);
   const [salary, setSalary] = useState<string>('');
-  const [incomeTax, setIncomeTax] = useState<string | null>(null);
+  const [incomeTax, setIncomeTax] = useState<IIncomeTax | null>(null);
 
   const { taxBrackets, loading, error } = useTaxBrackets(year);
   const { calculateIncomeTax } = useCalculateIncomeTax(taxBrackets);
@@ -33,7 +36,7 @@ function TaxCalculator() {
 
   const handleOnClickSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const value = calculateIncomeTax(salary);
+    const value = calculateIncomeTax(Number(salary));
     setIncomeTax(value);
   };
 
@@ -45,7 +48,15 @@ function TaxCalculator() {
     );
   };
 
-  const renderBrackets = () => {
+  const renderIncomeTax = () => {
+    if (!incomeTax) {
+      return null;
+    }
+
+    return <IncomeTax incomeTax={incomeTax} year={year} />;
+  };
+
+  const renderStatus = () => {
     if (loading) {
       return <Spinner />;
     }
@@ -53,30 +64,9 @@ function TaxCalculator() {
     if (error) {
       return <Alert variant="error" message={error.message} />;
     }
-
-    if (taxBrackets.length === 0) {
-      return null;
-    }
-
-    return (
-      <>
-        <Heading>Tax Brackets</Heading>
-        <Row direction="row">
-          <TaxBracket taxBrackets={taxBrackets} year={year} />
-        </Row>
-      </>
-    );
   };
 
-  const renderIncomeTax = () => {
-    if (!incomeTax) {
-      return null;
-    }
-
-    return (
-      <Heading marginTop={'3rem'}>{`Your income tax is ${incomeTax}`}</Heading>
-    );
-  };
+  const salaryHasError = !!salary && Number(salary) <= 0;
 
   return (
     <Container width="600px">
@@ -84,14 +74,17 @@ function TaxCalculator() {
       <Row>
         <Form>
           <Row>
-            <Label label="salary-label" name="salary">
-              Enter your Salary:
+            <Label label="salary-label" name="salary" hasError={salaryHasError}>
+              Enter your salary:
               <Input
                 value={salary}
                 onChange={(e) => setSalary(e.target.value)}
                 name="salary"
                 label="salary-label"
                 type="number"
+                min={0}
+                required
+                hasError={salaryHasError}
               />
             </Label>
             <Label label="year-label" name="year">
@@ -109,14 +102,14 @@ function TaxCalculator() {
           <Button
             type="button"
             onClick={handleOnClickSubmit}
-            disabled={!salary || !year || error !== null}
+            disabled={!salary || salaryHasError || error !== null || loading}
           >
             Submit
           </Button>
         </Form>
-        {renderIncomeTax()}
+        {renderStatus()}
       </Row>
-      {renderBrackets()}
+      {renderIncomeTax()}
     </Container>
   );
 }

@@ -40,6 +40,7 @@ function Input({ label, hasError, name, ...rest }: IInput) {
       name={name}
       hasError={hasError}
       aria-labelledby={label}
+      aria-invalid={hasError}
       {...rest}
     />
   );

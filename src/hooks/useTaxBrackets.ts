@@ -6,18 +6,18 @@ interface IUseTaxBracketsError {
   message: string;
 }
 
-type UseTaxBracketsResult = {
+interface IUseTaxBracketsReturn {
   taxBrackets: ITaxBracket[];
   loading: boolean;
   error: IUseTaxBracketsError | null;
-};
+}
 
 type TaxBracketsState =
   | { loading: false; taxBrackets: ITaxBracket[]; error: null }
   | { loading: false; taxBrackets: []; error: IUseTaxBracketsError }
   | { loading: true; taxBrackets: []; error: null };
 
-const useTaxBrackets = (year: string): UseTaxBracketsResult => {
+const useTaxBrackets = (year: string): IUseTaxBracketsReturn => {
   const mountedRef = useRef(true);
   const [state, setState] = useState<TaxBracketsState>({
     loading: true,

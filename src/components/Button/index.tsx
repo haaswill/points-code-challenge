@@ -1,6 +1,7 @@
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 import styled from 'styled-components';
 
-const Button = styled.button`
+const StyledButton = styled.button`
   background-color: ${({ theme }) => theme.colors.tertiary};
   border: 0 none;
   border-radius: ${({ theme }) => theme.borderRadius};
@@ -32,5 +33,17 @@ const Button = styled.button`
     outline-color: ${({ theme }) => theme.colors.primary};
   }
 `;
+
+function Button({
+  children,
+  disabled,
+  ...rest
+}: ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <StyledButton aria-disabled={disabled} disabled={disabled} {...rest}>
+      {children}
+    </StyledButton>
+  );
+}
 
 export { Button };

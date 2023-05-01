@@ -3,41 +3,57 @@ import { useCallback } from 'react';
 import { ITaxBracket } from '@/apiConfig/TaxBrackets';
 import { formatCurrency } from '@/formatters';
 
-type UseCalculateIncomeTax = (taxBrackets: ITaxBracket[]) => {
-  calculateIncomeTax: (salary: string) => string;
-};
+export interface ITaxPerBracket {
+  rate: string;
+  amount: string;
+}
 
-const useCalculateIncomeTax: UseCalculateIncomeTax = (taxBrackets) => {
+export interface IIncomeTax {
+  total: string;
+  taxesPerBracket: ITaxPerBracket[];
+  effectiveTaxRate: string;
+}
+
+interface IUseCalculateIncomeTaxReturn {
+  calculateIncomeTax: (salary: number) => IIncomeTax | null;
+}
+
+const useCalculateIncomeTax = (
+  taxBrackets: ITaxBracket[]
+): IUseCalculateIncomeTaxReturn => {
   const calculateIncomeTax = useCallback(
-    (salary: string) => {
-      let taxableIncome = Number(salary);
-      let marginalTax = 0;
-
-      for (let i = 0; i < taxBrackets.length; i++) {
-        const { min, max, rate } = taxBrackets[i];
-
-        // Makes sure taxable income is bigger than min
-        if (taxableIncome <= min) {
-          break;
-        }
-
-        // If no max, it's the last bracket
-        if (!max) {
-          marginalTax += (taxableIncome - min) * rate;
-          break;
-        }
-
-        // Calculates income in brackets and assigns the lowest value
-        const incomeInBracket = Math.min(taxableIncome - min, max - min);
-        // Calculates tax
-        const taxInBracket = incomeInBracket * rate;
-
-        // Decrements income & Increments tax
-        taxableIncome -= incomeInBracket;
-        marginalTax += taxInBracket;
+    (salary: number): IIncomeTax | null => {
+      if (!salary || salary <= 0) {
+        return null;
       }
 
-      return formatCurrency(marginalTax);
+      let taxOwned = 0;
+      let tempSalary = salary;
+      const taxesPerBracket: ITaxPerBracket[] = [];
+
+      for (let i = 0; i < taxBrackets.length; i++) {
+        const max = taxBrackets[i].max ?? Infinity;
+        const bracketIncome = Math.min(max - taxBrackets[i].min, tempSalary);
+        const bracketTax = bracketIncome * taxBrackets[i].rate;
+
+        taxesPerBracket.push({
+          amount: formatCurrency(bracketTax),
+          rate: `${(taxBrackets[i].rate * 100).toFixed(2)}%`,
+        });
+
+        taxOwned += bracketTax;
+        tempSalary -= bracketIncome;
+
+        if (salary <= max) {
+          break;
+        }
+      }
+
+      return {
+        total: formatCurrency(taxOwned),
+        taxesPerBracket,
+        effectiveTaxRate: ((taxOwned / salary) * 100 || 0).toFixed(2),
+      };
     },
     [taxBrackets]
   );
