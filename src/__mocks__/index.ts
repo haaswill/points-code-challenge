@@ -1,4 +1,5 @@
 import { ITaxBracket } from '@/apiConfig/TaxBrackets';
+import { IIncomeTax } from '@/hooks/useCalculateIncomeTax';
 
 export const getTaxBrackets = (year: number): ITaxBracket[] => {
   switch (year) {
@@ -27,4 +28,17 @@ export const getTaxBrackets = (year: number): ITaxBracket[] => {
         { min: 100001, rate: 0.33 },
       ];
   }
+};
+
+export const getIncomeTax = (): IIncomeTax => {
+  return {
+    total: '$9,000.00',
+    taxesPerBracket: [
+      {
+        amount: '$9,000.00',
+        rate: '15.00%',
+      },
+    ],
+    effectiveTaxRate: '15.00',
+  };
 };

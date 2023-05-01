@@ -1,16 +1,16 @@
-import { getByLabelText, render } from '@/test-utils';
-import { TaxBracket } from './index';
-import { getTaxBrackets } from '@/__mocks__';
+import { render } from '@/test-utils';
+import { IncomeTax } from './index';
+import { getIncomeTax } from '@/__mocks__';
 
 describe('TaxBracket', () => {
   it('renders with the proper roles', () => {
-    const taxBrackets = getTaxBrackets(2022);
+    const incomeTax = getIncomeTax();
     const { getByRole } = render(
-      <TaxBracket taxBrackets={taxBrackets} year="2022" />
+      <IncomeTax incomeTax={incomeTax} year="2022" />
     );
 
     expect(
-      getByRole('columnheader', { name: `Taxable Income - 2022 Brackets` })
+      getByRole('heading', { name: `Total Income Taxes in 2022: $9,000.00` })
     );
   });
 });

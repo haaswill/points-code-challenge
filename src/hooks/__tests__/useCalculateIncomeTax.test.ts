@@ -1,15 +1,15 @@
 import { renderHook } from '@testing-library/react';
 import { useCalculateIncomeTax } from '../useCalculateIncomeTax';
-import { getTaxBrackets } from '@/__mocks__';
+import { getIncomeTax, getTaxBrackets } from '@/__mocks__';
 import { ITaxBracket } from '../../apiConfig/TaxBrackets';
 
 describe('useTaxBrackets', () => {
   let mockTaxBrackets: ITaxBracket[];
-  const salary = '60000';
-  const correctIncomeTax = '$6,000.00';
+  const salary = 60000;
+  const correctIncomeTax = getIncomeTax();
 
   beforeAll(() => {
-    mockTaxBrackets = getTaxBrackets(2021);
+    mockTaxBrackets = getTaxBrackets(2022);
   });
 
   it('returns the correct income tax', () => {
